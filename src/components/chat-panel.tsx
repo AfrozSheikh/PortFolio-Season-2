@@ -49,11 +49,22 @@ export default function ChatPanel() {
     setMessages(prev => [...prev, { id: Date.now().toString(), text, sender }]);
   };
 
+  const updateLastMessage = (text: string) => {
+    setMessages(prev => {
+        const lastMsg = prev[prev.length - 1];
+        if(lastMsg && lastMsg.sender === 'ai'){
+            return [...prev.slice(0, -1), {...lastMsg, text: lastMsg.text + text}];
+        }
+        return [...prev, {id: Date.now().toString(), text, sender: 'ai'}];
+    });
+  }
+
   const handleSend = async (prompt?: string) => {
     const userMessage = prompt || input;
     if (!userMessage.trim()) return;
 
-    addMessage(userMessage, 'user');
+    const newHistory = [...messages, { id: Date.now().toString(), text: userMessage, sender: 'user' as const }];
+    setMessages(newHistory);
     setInput('');
     setIsLoading(true);
 
@@ -62,21 +73,32 @@ export default function ChatPanel() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          type: 'generic-chat',
-          payload: {
-            message: userMessage,
-            history: messages
-          }
+          message: userMessage,
+          history: messages
         }),
       });
 
       if (!res.ok) {
         throw new Error(`API error: ${res.statusText}`);
       }
+      
+      if (!res.body) {
+        throw new Error('Response body is null');
+      }
 
-      const data = await res.json();
-      const aiResponse = data.answer || data.explanation || data.summary || "I'm not sure how to answer that. Please try asking another way.";
-      addMessage(aiResponse, 'ai');
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let done = false;
+
+      // Create a placeholder for the AI message
+      addMessage('', 'ai');
+
+      while (!done) {
+        const { value, done: readerDone } = await reader.read();
+        done = readerDone;
+        const chunk = decoder.decode(value, { stream: !done });
+        updateLastMessage(chunk);
+      }
 
     } catch (error) {
       console.error(error);
@@ -85,7 +107,7 @@ export default function ChatPanel() {
         title: 'Error',
         description: 'Failed to get response from AI assistant.',
       });
-      addMessage("Sorry, I encountered an error. Please try again.", 'ai');
+      updateLastMessage("Sorry, I encountered an error. Please try again.");
     } finally {
       setIsLoading(false);
       inputRef.current?.focus();
@@ -120,7 +142,13 @@ export default function ChatPanel() {
                 </Avatar>
               )}
               <div className={cn("max-w-md rounded-xl px-4 py-2.5", message.sender === 'user' ? "bg-primary/90 text-primary-foreground" : "bg-muted")}>
-                <p className="text-sm whitespace-pre-wrap">{message.text}</p>
+                {message.text ? (
+                    <p className="text-sm whitespace-pre-wrap">{message.text}</p>
+                ) : (
+                    <div className="flex items-center space-x-2 text-muted-foreground">
+                        <Loader2 className="h-5 w-5 animate-spin" />
+                    </div>
+                )}
               </div>
               {message.sender === 'user' && (
                 <Avatar className="h-8 w-8">
@@ -129,7 +157,7 @@ export default function ChatPanel() {
               )}
             </div>
           ))}
-          {isLoading && (
+          {isLoading && messages[messages.length-1]?.sender !== 'ai' && (
             <div className="flex items-start gap-3">
               <Avatar className="h-8 w-8">
                 <AvatarFallback><Bot size={20} /></AvatarFallback>
@@ -189,4 +217,3 @@ export default function ChatPanel() {
     </div>
   );
 }
-
