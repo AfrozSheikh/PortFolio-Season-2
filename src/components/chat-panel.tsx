@@ -1,35 +1,73 @@
+
 'use client';
 
 import * as React from 'react';
-import { Bot, Loader2, Send } from 'lucide-react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Bot, Loader2, Send, User, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { projects } from '@/lib/data';
+import { CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { profile } from '@/lib/data';
+import { cn } from '@/lib/utils';
 
-type AIResponseType = string | null;
+interface Message {
+  id: string;
+  text: string;
+  sender: 'user' | 'ai';
+}
+
+const QUICK_PROMPTS = [
+    "Why should we hire you?",
+    "Tell me about the web-monitor-saas project.",
+    "How do your skills match a senior frontend developer role?",
+];
 
 export default function ChatPanel() {
-  const [activeTab, setActiveTab] = React.useState('why-hire');
+  const [messages, setMessages] = React.useState<Message[]>([]);
+  const [input, setInput] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false);
-  const [response, setResponse] = React.useState<AIResponseType>(null);
-  const [jobRequirements, setJobRequirements] = React.useState('');
-  const [selectedProject, setSelectedProject] = React.useState('');
-
   const { toast } = useToast();
+  const scrollAreaRef = React.useRef<HTMLDivElement>(null);
+  const inputRef = React.useRef<HTMLTextAreaElement>(null);
 
-  const handleQuery = async (type: string, payload?: any) => {
+  React.useEffect(() => {
+    if (scrollAreaRef.current) {
+      scrollAreaRef.current.scrollTo({ top: scrollAreaRef.current.scrollHeight, behavior: 'smooth' });
+    }
+  }, [messages]);
+
+  React.useEffect(() => {
+    if(messages.length === 0 && !isLoading) {
+      addMessage("Hello! I'm Afroz's AI assistant. You can ask me anything about his skills, projects, or experience. How can I help you?", 'ai');
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  
+  const addMessage = (text: string, sender: 'user' | 'ai') => {
+    setMessages(prev => [...prev, { id: Date.now().toString(), text, sender }]);
+  };
+
+  const handleSend = async (prompt?: string) => {
+    const userMessage = prompt || input;
+    if (!userMessage.trim()) return;
+
+    addMessage(userMessage, 'user');
+    setInput('');
     setIsLoading(true);
-    setResponse(null);
+
     try {
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type, payload }),
+        body: JSON.stringify({
+          type: 'generic-chat',
+          payload: {
+            message: userMessage,
+            history: messages
+          }
+        }),
       });
 
       if (!res.ok) {
@@ -37,7 +75,9 @@ export default function ChatPanel() {
       }
 
       const data = await res.json();
-      setResponse(data.answer || data.explanation || data.summary);
+      const aiResponse = data.answer || data.explanation || data.summary || "I'm not sure how to answer that. Please try asking another way.";
+      addMessage(aiResponse, 'ai');
+
     } catch (error) {
       console.error(error);
       toast({
@@ -45,36 +85,23 @@ export default function ChatPanel() {
         title: 'Error',
         description: 'Failed to get response from AI assistant.',
       });
+      addMessage("Sorry, I encountered an error. Please try again.", 'ai');
     } finally {
       setIsLoading(false);
+      inputRef.current?.focus();
     }
-  };
-
-  const renderResponse = () => {
-    if (isLoading) {
-      return (
-        <div className="flex items-center space-x-2 text-muted-foreground">
-          <Loader2 className="h-5 w-5 animate-spin" />
-          <span>Assistant is thinking...</span>
-        </div>
-      );
-    }
-    if (response) {
-      return (
-        <div className="prose prose-sm prose-p:text-foreground/90 prose-strong:text-primary whitespace-pre-wrap rounded-md border bg-muted/30 p-4">
-            {response}
-        </div>
-      );
-    }
-    return null;
   };
 
   return (
     <div className="flex h-full flex-col bg-background text-foreground">
-      <CardHeader className="flex-shrink-0">
+      <CardHeader className="flex-shrink-0 border-b">
         <div className="flex items-center space-x-3">
-          <div className="rounded-full border border-primary/50 bg-primary/20 p-2">
-            <Bot className="h-6 w-6 text-primary" />
+          <div className="relative">
+            <Avatar className="h-10 w-10">
+              <AvatarImage src={profile.avatarUrl} alt="AI Assistant" />
+              <AvatarFallback>AI</AvatarFallback>
+            </Avatar>
+            <div className="absolute bottom-0 right-0 block h-3 w-3 rounded-full border-2 border-background bg-green-500" />
           </div>
           <div>
             <CardTitle className="font-headline text-lg text-primary">AI Assistant</CardTitle>
@@ -82,65 +109,84 @@ export default function ChatPanel() {
           </div>
         </div>
       </CardHeader>
-      <CardContent className="flex-grow flex flex-col gap-4 overflow-hidden">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="flex flex-col flex-grow overflow-hidden">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="why-hire">Why Hire?</TabsTrigger>
-            <TabsTrigger value="projects">Projects</TabsTrigger>
-            <TabsTrigger value="skills">Skills Match</TabsTrigger>
-          </TabsList>
-          <div className="flex-grow mt-4 overflow-hidden">
-            <ScrollArea className="h-full">
-              <div className="pr-4">
-                <TabsContent value="why-hire" className="mt-0">
-                  <h3 className="font-semibold text-primary mb-2">Why should we hire Afroz?</h3>
-                  <p className="text-sm text-muted-foreground mb-4">Click the button to get a concise summary of Afroz&apos;s key strengths and experiences for a hiring manager.</p>
-                  <Button onClick={() => handleQuery('why-hire')} disabled={isLoading}>
-                    <Send className="mr-2 h-4 w-4" />
-                    Generate Summary
-                  </Button>
-                </TabsContent>
-                <TabsContent value="projects" className="mt-0">
-                  <h3 className="font-semibold text-primary mb-2">Explain a project</h3>
-                  <p className="text-sm text-muted-foreground mb-4">Select one of Afroz&apos;s projects to get a detailed explanation from the AI assistant.</p>
-                  <div className="flex items-center space-x-2">
-                    <Select onValueChange={setSelectedProject} value={selectedProject}>
-                      <SelectTrigger className="w-full md:w-[280px]">
-                        <SelectValue placeholder="Select a project" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {projects.map((p) => (
-                          <SelectItem key={p.slug} value={p.slug}>{p.name}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <Button onClick={() => handleQuery('project-explanation', { projectSlug: selectedProject })} disabled={isLoading || !selectedProject}>
-                      <Send className="mr-2 h-4 w-4" />
-                      Explain
-                    </Button>
-                  </div>
-                </TabsContent>
-                <TabsContent value="skills" className="mt-0">
-                  <h3 className="font-semibold text-primary mb-2">Match skills to job requirements</h3>
-                  <p className="text-sm text-muted-foreground mb-4">Paste your job requirements below, and the AI will generate a summary of how Afroz&apos;s skills align with the role.</p>
-                  <Textarea
-                    placeholder="Paste job description or required skills here..."
-                    value={jobRequirements}
-                    onChange={(e) => setJobRequirements(e.target.value)}
-                    className="mb-2"
-                    rows={6}
-                  />
-                  <Button onClick={() => handleQuery('skills-summary', { jobRequirements })} disabled={isLoading || !jobRequirements}>
-                    <Send className="mr-2 h-4 w-4" />
-                    Summarize Match
-                  </Button>
-                </TabsContent>
-                <div className="mt-6">{renderResponse()}</div>
+      
+      <ScrollArea className="flex-grow" ref={scrollAreaRef}>
+        <div className="p-4 space-y-6">
+          {messages.map((message) => (
+            <div key={message.id} className={cn("flex items-start gap-3", message.sender === 'user' ? "justify-end" : "")}>
+              {message.sender === 'ai' && (
+                <Avatar className="h-8 w-8">
+                  <AvatarFallback><Bot size={20} /></AvatarFallback>
+                </Avatar>
+              )}
+              <div className={cn("max-w-md rounded-xl px-4 py-2.5", message.sender === 'user' ? "bg-primary/90 text-primary-foreground" : "bg-muted")}>
+                <p className="text-sm whitespace-pre-wrap">{message.text}</p>
               </div>
-            </ScrollArea>
+              {message.sender === 'user' && (
+                <Avatar className="h-8 w-8">
+                  <AvatarFallback><User size={20} /></AvatarFallback>
+                </Avatar>
+              )}
+            </div>
+          ))}
+          {isLoading && (
+            <div className="flex items-start gap-3">
+              <Avatar className="h-8 w-8">
+                <AvatarFallback><Bot size={20} /></AvatarFallback>
+              </Avatar>
+              <div className="max-w-md rounded-xl px-4 py-3 bg-muted">
+                <div className="flex items-center space-x-2 text-muted-foreground">
+                  <Loader2 className="h-5 w-5 animate-spin" />
+                  <span>Assistant is thinking...</span>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+        {messages.length <= 1 && !isLoading && (
+            <div className="p-4 space-y-2">
+                <p className='text-sm text-muted-foreground'>Or try one of these prompts:</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+                    {QUICK_PROMPTS.map(prompt => (
+                        <button
+                          key={prompt}
+                          onClick={() => handleSend(prompt)}
+                          className="text-left text-sm p-3 rounded-lg border bg-background hover:bg-muted transition-colors"
+                        >
+                          {prompt}
+                        </button>
+                    ))}
+                </div>
+            </div>
+        )}
+      </ScrollArea>
+
+      <div className="border-t p-4 flex-shrink-0">
+        <div className="relative">
+          <Textarea
+            ref={inputRef}
+            placeholder="Ask anything..."
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleSend();
+              }
+            }}
+            className="pr-20 min-h-[40px]"
+            rows={1}
+            disabled={isLoading}
+          />
+          <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center">
+            {input && <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setInput('')}><X size={18}/></Button>}
+            <Button onClick={() => handleSend()} disabled={isLoading || !input.trim()} size="icon" className="h-8 w-8">
+              <Send size={18}/>
+            </Button>
           </div>
-        </Tabs>
-      </CardContent>
+        </div>
+      </div>
     </div>
   );
 }
+

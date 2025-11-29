@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -6,6 +7,7 @@ import { useCommandHistory } from '@/hooks/use-command-history';
 import { handleCommand } from './command-handler';
 import { HistoryItem } from '@/lib/types';
 import { Terminal as TerminalIcon } from 'lucide-react';
+import { WelcomeMessage } from './outputs';
 
 interface TerminalProps {
   history: HistoryItem[];
@@ -60,8 +62,8 @@ export default function Terminal({ history, setHistory, setTheme, setShowChat }:
   }, [history]);
 
   const processCommand = (command: string) => {
-    if (command.trim() === 'clear') {
-        setHistory([]);
+    if (command.trim().toLowerCase() === 'clear') {
+        setHistory([{ id: 0, input: '', output: <WelcomeMessage /> }]);
         return;
     }
     const output = handleCommand({
@@ -94,7 +96,7 @@ export default function Terminal({ history, setHistory, setTheme, setShowChat }:
       setInputValue(nextCommand || '');
     } else if (e.key === 'l' && e.ctrlKey) {
         e.preventDefault();
-        setHistory([]);
+        setHistory([{ id: 0, input: '', output: <WelcomeMessage /> }]);
     }
   };
 

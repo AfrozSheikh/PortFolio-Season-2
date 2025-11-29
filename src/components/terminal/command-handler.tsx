@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -54,6 +55,10 @@ const commandsList: { [key: string]: string } = {
   theme: 'Change the theme. Use "dark" or "light".',
   chat: 'Open the AI chat assistant.',
   clear: 'Clear the terminal screen.',
+  whois: 'Alias for the "about" command.',
+  repo: 'Opens the GitHub repository for this portfolio.',
+  email: 'Display my email address.',
+  resume: 'Get a link to my resume (placeholder).',
 };
 
 
@@ -66,6 +71,7 @@ export const handleCommand = ({ command, setHistory, setTheme, setShowChat, data
     
     case 'about':
     case 'bio':
+    case 'whois':
       return <AboutOutput profile={data.profile} />;
 
     case 'skills':
@@ -102,6 +108,19 @@ export const handleCommand = ({ command, setHistory, setTheme, setShowChat, data
     case 'contact':
         return <ContactOutput profile={data.profile} links={data.links} />;
     
+    case 'email':
+        const emailLink = data.links.find(l => l.type === 'email');
+        return <div>{emailLink ? emailLink.url.replace('mailto:', '') : 'Email not found.'}</div>;
+    
+    case 'repo':
+        window.open('https://github.com/afroz-sh/terminal-portfolio', '_blank');
+        return <div>Opening GitHub repository...</div>;
+        
+    case 'resume':
+        // Placeholder for resume link
+        window.open('/resume.pdf', '_blank');
+        return <div>Opening resume... (Note: This is a placeholder link)</div>;
+
     case 'theme':
         const newTheme = args[0];
         if (newTheme === 'dark' || newTheme === 'light') {
