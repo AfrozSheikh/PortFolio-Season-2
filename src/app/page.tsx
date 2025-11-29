@@ -21,8 +21,8 @@ export default function Home() {
   }, [theme]);
 
   return (
-    <main className="relative flex min-h-screen flex-col items-center justify-center p-4 lg:p-8 transition-colors duration-300">
-      <div className="absolute top-4 right-4 z-20">
+    <main className="relative flex min-h-screen flex-col items-center justify-center p-2 sm:p-4 lg:p-6 transition-colors duration-300">
+      <div className="absolute top-3 right-3 sm:top-4 sm:right-4 z-20">
         <Button
           variant="outline"
           size="sm"
@@ -31,11 +31,11 @@ export default function Home() {
         >
           {showChat ? (
             <>
-              <TerminalIcon className="mr-2 h-4 w-4" /> Go to Terminal
+              <TerminalIcon className="mr-2 h-4 w-4" /> Terminal
             </>
           ) : (
             <>
-              <MessageSquare className="mr-2 h-4 w-4" /> Chat with AI
+              <MessageSquare className="mr-2 h-4 w-4" /> AI Chat
             </>
           )}
         </Button>

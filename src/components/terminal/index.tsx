@@ -17,13 +17,13 @@ interface TerminalProps {
 }
 
 const TerminalHeader = () => (
-  <div className="flex items-center h-8 px-3 bg-zinc-800/50 dark:bg-zinc-800/50 border-b border-white/10 flex-shrink-0">
-    <div className="flex space-x-2">
+  <div className="flex items-center h-8 px-3 bg-muted/50 border-b flex-shrink-0">
+    <div className="flex space-x-1.5">
       <div className="w-3 h-3 rounded-full bg-red-500"></div>
       <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
       <div className="w-3 h-3 rounded-full bg-green-500"></div>
     </div>
-    <div className="flex-grow text-center text-sm font-sans text-zinc-400">
+    <div className="flex-grow text-center text-sm font-sans text-muted-foreground">
       <TerminalIcon className="inline-block h-4 w-4 mr-1 -mt-0.5" />
       <span>afroz@portfolio: ~</span>
     </div>

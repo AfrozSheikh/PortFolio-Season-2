@@ -20,7 +20,7 @@ const Title = ({ children }: { children: React.ReactNode }) => (
   <h2 className="font-headline text-primary uppercase tracking-widest font-bold text-base mb-2">{children}</h2>
 );
 
-const Divider = () => <div className="w-full border-t border-dashed border-foreground/30 my-3"></div>;
+const Divider = () => <div className="w-full border-t border-dashed border-foreground/20 my-3"></div>;
 
 export const WelcomeMessage = () => (
   <OutputContainer>
@@ -37,6 +37,7 @@ export const WelcomeMessage = () => (
     </pre>
     <div>Welcome to the interactive portfolio of Afroz Sheikh.</div>
     <div className="mt-2">Type <span className="text-primary font-bold">`help`</span> to see the list of available commands.</div>
+    <div className="mt-1">Or, switch to the <span className="text-primary font-bold">`AI Chat`</span> to talk to my AI assistant.</div>
   </OutputContainer>
 );
 
@@ -110,7 +111,7 @@ export const ProjectsOutput = ({ projects, filter }: { projects: Project[], filt
             {projectsToShow.map(p => (
                 <div key={p.slug}>
                     <div className="flex items-baseline">
-                        <h3 className="font-bold text-foreground mr-2">{p.name} <span className='text-primary text-xs'>({p.slug})</span></h3>
+                        <h3 className="font-bold text-foreground mr-2">{p.name} <span className='text-primary/70 text-xs'>({p.slug})</span></h3>
                         {p.isFeatured && <Star className="h-3 w-3 text-yellow-400" />}
                     </div>
                     <p className="text-muted-foreground ml-1">{p.shortDescription}</p>
@@ -137,7 +138,7 @@ export const ProjectDetailOutput = ({ project }: { project: Project }) => (
         
         <h3 className="font-bold text-foreground mb-1">Tech Stack:</h3>
         <div className="flex flex-wrap gap-2 mb-3">
-            {project.techStack.map(t => <Badge key={t} variant="secondary" className="bg-primary/10 text-primary border-primary/20 hover:bg-primary/20">{t}</Badge>)}
+            {project.techStack.map(t => <Badge key={t} variant="secondary" className="text-sm bg-primary/10 text-primary border-primary/20 hover:bg-primary/20">{t}</Badge>)}
         </div>
 
         <h3 className="font-bold text-foreground mb-1">Highlights:</h3>
@@ -218,7 +219,7 @@ export const LinksOutput = ({ links }: { links: Link[] }) => (
             {links.map(link => (
                 <li key={link.type}>
                     <span className="font-bold capitalize w-20 inline-block">{link.label}:</span>
-                    <a href={link.url} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">{link.url}</a>
+                    <a href={link.url} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">{link.url.replace('mailto:', '')}</a>
                 </li>
             ))}
         </ul>
@@ -231,8 +232,8 @@ export const ContactOutput = ({ profile, links }: { profile: Profile, links: Lin
         <OutputContainer>
             <Title>Contact Me</Title>
             <p className="mb-2">Feel free to reach out. I&apos;m open to new opportunities and collaborations.</p>
-            {emailLink && <div><span className='font-bold w-12 inline-block'>Email:</span> <a href={emailLink.url} className='text-primary hover:underline'>{emailLink.url.replace('mailto:', '')}</a></div>}
-            <div><span className='font-bold w-12 inline-block'>Based in:</span> {profile.location}</div>
+            {emailLink && <div><span className='font-bold w-16 inline-block'>Email:</span> <a href={emailLink.url} className='text-primary hover:underline'>{emailLink.url.replace('mailto:', '')}</a></div>}
+            <div><span className='font-bold w-16 inline-block'>Based in:</span> {profile.location}</div>
             <div className='mt-3'><LinksOutput links={links.filter(l => l.type !== 'email')} /></div>
         </OutputContainer>
     );
