@@ -29,7 +29,7 @@ export default function Home() {
           size="sm"
           onClick={() => setShowChat(!showChat)}
           className={cn(
-            "bg-background/80 backdrop-blur-sm",
+            "bg-background/80 backdrop-blur-sm border-primary/50 text-primary hover:bg-primary/10 hover:text-primary",
             !showChat && "ai-chat-button-glow"
           )}
         >
@@ -39,7 +39,7 @@ export default function Home() {
             </>
           ) : (
             <>
-              <MessageSquare className="mr-2 h-4 w-4" /> AI Chat
+              <MessageSquare className="mr-2 h-4 w-4" /> Assistant
             </>
           )}
         </Button>
