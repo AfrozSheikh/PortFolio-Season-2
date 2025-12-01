@@ -27,6 +27,7 @@ const TerminalHeader = ({ setShowChat }: { setShowChat: (show: boolean) => void 
     <div className="text-center text-sm font-sans text-muted-foreground truncate">
       <TerminalIcon className="inline-block h-4 w-4 mr-1 -mt-0.5" />
       <span className="hidden sm:inline">afroz@portfolio: ~</span>
+      <span className="sm:hidden">afroz@portfolio</span>
     </div>
     <div className="flex justify-end">
       <Button
@@ -39,7 +40,7 @@ const TerminalHeader = ({ setShowChat }: { setShowChat: (show: boolean) => void 
         )}
       >
           <MessageSquare className="mr-2 h-4 w-4" />
-          <span className="hidden sm:inline">Assistant</span>
+          <span>Assistant</span>
       </Button>
     </div>
   </div>
