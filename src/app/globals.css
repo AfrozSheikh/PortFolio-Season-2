@@ -93,3 +93,25 @@
     background-position: 0 100vh;
   }
 }
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.caret {
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 2px hsl(var(--primary) / 0.5), 0 0 5px hsl(var(--primary) / 0.3);
+  }
+  50% {
+    box-shadow: 0 0 8px hsl(var(--primary) / 0.7), 0 0 15px hsl(var(--primary) / 0.5);
+  }
+}
+
+.ai-chat-button-glow {
+  animation: pulse-glow 3s infinite ease-in-out;
+}

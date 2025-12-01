@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { MessageSquare, Terminal as TerminalIcon } from 'lucide-react';
 import { type HistoryItem } from '@/lib/types';
 import { WelcomeMessage } from '@/components/terminal/outputs';
+import { cn } from '@/lib/utils';
 
 export default function Home() {
   const [theme, setTheme] = React.useState('dark');
@@ -27,7 +28,10 @@ export default function Home() {
           variant="outline"
           size="sm"
           onClick={() => setShowChat(!showChat)}
-          className="bg-background/80 backdrop-blur-sm"
+          className={cn(
+            "bg-background/80 backdrop-blur-sm",
+            !showChat && "ai-chat-button-glow"
+          )}
         >
           {showChat ? (
             <>

@@ -121,21 +121,21 @@ export default function ChatPanel() {
 
   return (
     <div className="flex h-full flex-col bg-card/80 backdrop-blur-sm text-card-foreground">
-      <CardHeader className="flex-shrink-0 border-b">
-        <div className="flex items-center space-x-4">
+      <CardHeader className="flex-shrink-0 border-b p-4">
+        <div className="flex items-center space-x-2 sm:space-x-4">
           <div className="relative">
-            <Avatar className="h-12 w-12 border-2 border-primary/50">
+            <Avatar className="h-10 w-10 sm:h-12 sm:w-12 border-2 border-primary/50">
               <AvatarImage src={profile.avatarUrl} alt="AI Assistant" />
               <AvatarFallback>AI</AvatarFallback>
             </Avatar>
-            <div className="absolute -bottom-1 -right-1 block h-4 w-4 rounded-full border-2 border-background bg-green-500" />
+            <div className="absolute -bottom-1 -right-1 block h-3 w-3 sm:h-4 sm:w-4 rounded-full border-2 border-background bg-green-500" />
           </div>
           <div>
-            <CardTitle className="font-headline text-lg text-primary flex items-center gap-2">
+            <CardTitle className="font-headline text-base sm:text-lg text-primary flex items-center gap-2">
                 <Sparkles size={20}/>
                 <span>AI Assistant</span>
             </CardTitle>
-            <CardDescription>Your guide to Afroz&apos;s portfolio. Available 24/7.</CardDescription>
+            <CardDescription className="text-xs sm:text-sm">Your guide to Afroz&apos;s portfolio.</CardDescription>
           </div>
         </div>
       </CardHeader>
@@ -143,14 +143,14 @@ export default function ChatPanel() {
       <ScrollArea className="flex-grow" viewportRef={viewportRef}>
         <div className="p-4 sm:p-6 space-y-6">
           {messages.map((message) => (
-            <div key={message.id} className={cn("flex items-start gap-4", message.sender === 'user' ? "justify-end" : "")}>
+            <div key={message.id} className={cn("flex items-start gap-3 sm:gap-4", message.sender === 'user' ? "justify-end" : "")}>
               {message.sender === 'ai' && (
-                <Avatar className="h-9 w-9 border-2 border-primary/20 bg-background">
-                    <AvatarFallback className='bg-transparent text-primary'><Bot size={20} /></AvatarFallback>
+                <Avatar className="h-8 w-8 sm:h-9 sm:w-9 border-2 border-primary/20 bg-background">
+                    <AvatarFallback className='bg-transparent text-primary'><Bot size={18} /></AvatarFallback>
                 </Avatar>
               )}
               <div className={cn(
-                  "max-w-xl rounded-lg px-4 py-3 shadow-sm prose prose-sm prose-invert prose-p:my-0",
+                  "max-w-xl rounded-lg px-3 py-2 sm:px-4 sm:py-3 shadow-sm prose prose-sm prose-invert prose-p:my-0",
                    message.sender === 'user' ? "bg-primary text-primary-foreground" : "bg-muted"
                 )}>
                 {message.text ? (
@@ -162,8 +162,8 @@ export default function ChatPanel() {
                 )}
               </div>
               {message.sender === 'user' && (
-                <Avatar className="h-9 w-9 border">
-                  <AvatarFallback><User size={20} /></AvatarFallback>
+                <Avatar className="h-8 w-8 sm:h-9 sm-w-9 border">
+                  <AvatarFallback><User size={18} /></AvatarFallback>
                 </Avatar>
               )}
             </div>
@@ -201,7 +201,7 @@ export default function ChatPanel() {
         <ScrollBar/>
       </ScrollArea>
 
-      <div className="border-t bg-card/50 p-4 flex-shrink-0">
+      <div className="border-t bg-card/50 p-2 sm:p-4 flex-shrink-0">
         <div className="relative">
           <Textarea
             ref={inputRef}
@@ -214,13 +214,13 @@ export default function ChatPanel() {
                 handleSend();
               }
             }}
-            className="pr-24 min-h-[44px] text-base bg-input placeholder:text-muted-foreground"
+            className="pr-20 sm:pr-24 min-h-[44px] text-base bg-input placeholder:text-muted-foreground"
             rows={1}
             disabled={isLoading}
           />
           <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center">
-            {input && !isLoading && <Button variant="ghost" size="icon" className="h-9 w-9" onClick={() => setInput('')}><X size={18}/></Button>}
-            <Button onClick={() => handleSend()} disabled={isLoading || !input.trim()} size="icon" className="h-9 w-9">
+            {input && !isLoading && <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-9 sm:w-9" onClick={() => setInput('')}><X size={18}/></Button>}
+            <Button onClick={() => handleSend()} disabled={isLoading || !input.trim()} size="icon" className="h-8 w-8 sm:h-9 sm:w-9">
               {isLoading ? <Loader2 size={18} className="animate-spin" /> : <Send size={18}/>}
             </Button>
           </div>

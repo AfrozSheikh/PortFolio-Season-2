@@ -30,7 +30,7 @@ const TerminalHeader = () => (
 );
 
 const InputLine = ({ value, onChange, onKeyDown, inputRef }: any) => (
-  <div className="flex text-base w-full">
+  <div className="flex text-base w-full items-center">
     <span className="text-primary font-bold mr-2">&gt;</span>
     <input
       ref={inputRef}
@@ -45,6 +45,7 @@ const InputLine = ({ value, onChange, onKeyDown, inputRef }: any) => (
       autoCorrect="off"
       spellCheck="false"
     />
+    <span className="w-2 h-4 bg-primary caret ml-1"></span>
   </div>
 );
 
@@ -108,7 +109,7 @@ export default function Terminal({ history, setHistory, setTheme, setShowChat }:
   return (
     <div className="h-full flex flex-col bg-background/50 backdrop-blur-sm" onClick={handleTerminalClick}>
       <TerminalHeader />
-      <div ref={terminalRef} className="flex-grow p-4 overflow-y-auto">
+      <div ref={terminalRef} className="flex-grow p-2 sm:p-4 overflow-y-auto">
         <div className="flex flex-col space-y-4">
           {history.map((item) => (
             <div key={item.id}>
