@@ -26,8 +26,8 @@ const TerminalHeader = ({ setShowChat }: { setShowChat: (show: boolean) => void 
     </div>
     <div className="text-center text-sm font-sans text-muted-foreground truncate">
       <TerminalIcon className="inline-block h-4 w-4 mr-1 -mt-0.5" />
-      <span className="hidden sm:inline">afroz@: ~</span>
-      <span className="sm:hidden">afroz@</span>
+      <span className="hidden sm:inline">afroz@portfolio: ~</span>
+      <span className="sm:hidden">afroz@portfolio</span>
     </div>
     <div className="flex justify-end">
       <Button
@@ -46,9 +46,9 @@ const TerminalHeader = ({ setShowChat }: { setShowChat: (show: boolean) => void 
   </div>
 );
 
-const InputLine = ({ value, onChange, onKeyDown, inputRef }: any) => (
+const InputLine = ({ value, onChange, onKeyDown, inputRef, ipAddress }: any) => (
   <div className="flex text-base w-full items-center bg-input/70 p-2 rounded-md">
-    <span className="text-primary font-bold mr-2">&gt;</span>
+    <span className="text-primary font-bold mr-2 whitespace-nowrap">{ipAddress}@portfolio:~$</span>
     <input
       ref={inputRef}
       type="text"
@@ -68,6 +68,7 @@ const InputLine = ({ value, onChange, onKeyDown, inputRef }: any) => (
 
 export default function Terminal({ history, setHistory, setTheme, setShowChat }: TerminalProps) {
   const [inputValue, setInputValue] = React.useState('');
+  const [ipAddress, setIpAddress] = React.useState('');
   const { commandHistory, navigateHistory, addCommandToHistory } = useCommandHistory();
   const terminalRef = React.useRef<HTMLDivElement>(null);
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -80,6 +81,10 @@ export default function Terminal({ history, setHistory, setTheme, setShowChat }:
   }, [history]);
   
   React.useEffect(() => {
+    // Generate a random IP on mount to avoid hydration mismatch
+    const randomOctet = () => Math.floor(Math.random() * 256);
+    setIpAddress(`${randomOctet()}.${randomOctet()}.${randomOctet()}.${randomOctet()}`);
+    
     const focusInput = () => inputRef.current?.focus();
     focusInput();
     // Re-focus on window focus
@@ -142,7 +147,7 @@ export default function Terminal({ history, setHistory, setTheme, setShowChat }:
             <div key={item.id}>
               {item.input && (
                 <div className="flex text-base">
-                  <span className="text-primary font-bold mr-2">&gt;</span>
+                  <span className="text-primary font-bold mr-2 whitespace-nowrap">{ipAddress}@portfolio:~$</span>
                   <span>{item.input}</span>
                 </div>
               )}
@@ -156,6 +161,7 @@ export default function Terminal({ history, setHistory, setTheme, setShowChat }:
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInputValue(e.target.value)}
             onKeyDown={handleKeyDown}
             inputRef={inputRef}
+            ipAddress={ipAddress}
           />
         </div>
       </div>
