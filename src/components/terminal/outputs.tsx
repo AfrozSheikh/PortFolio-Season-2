@@ -26,14 +26,13 @@ const Divider = () => <div className="w-full border-t border-dashed border-borde
 export const WelcomeMessage = () => (
   <OutputContainer>
     <pre className="font-code text-primary text-xs sm:text-sm whitespace-pre">
-      {`
-      ████████╗███████╗██████╗ ███╗   ███╗
-      ╚══██╔══╝██╔════╝██╔══██╗████╗ ████║
-         ██║   █████╗  ██████╔╝██╔████╔██║
-         ██║   ██╔══╝  ██╔══██╗██║╚██╔╝██║
-         ██║   ███████╗██║  ██║██║ ╚═╝ ██║
-         ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝
-      `}
+{`
+          ___         __                     
+   /\\    / _ \\ O O O / _|_ __  ___  ___  _ _ 
+  /--\\  | | | | | | |  _| '_ \\/ _ \\/ _ \\| '_|
+ /----\\ | |_| | | | | |_| |_) | (_) | (_) | |  
+/------\\ \\___/|_| |_|\\__|_.__/ \\___/ \\___/|_|
+`}
     </pre>
     <div>Welcome to the interactive portfolio of Afroz Sheikh.</div>
     <div className="mt-2">Type <span className="text-primary font-bold">`help`</span> to see the list of available commands.</div>

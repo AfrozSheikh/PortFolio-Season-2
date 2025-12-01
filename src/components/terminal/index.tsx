@@ -61,6 +61,10 @@ export default function Terminal({ history, setHistory, setTheme, setShowChat }:
     }
     inputRef.current?.focus();
   }, [history]);
+  
+  React.useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
 
   const processCommand = (command: string) => {
     if (command.trim().toLowerCase() === 'clear') {
