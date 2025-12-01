@@ -5,8 +5,10 @@ import { profile, skills, projects, experience, education, achievements, links }
 import { useCommandHistory } from '@/hooks/use-command-history';
 import { handleCommand } from './command-handler';
 import { HistoryItem } from '@/lib/types';
-import { Terminal as TerminalIcon } from 'lucide-react';
+import { Terminal as TerminalIcon, MessageSquare } from 'lucide-react';
 import { WelcomeMessage } from './outputs';
+import { Button } from '../ui/button';
+import { cn } from '@/lib/utils';
 
 interface TerminalProps {
   history: HistoryItem[];
@@ -15,9 +17,9 @@ interface TerminalProps {
   setShowChat: (show: boolean) => void;
 }
 
-const TerminalHeader = () => (
-  <div className="flex items-center h-8 px-3 bg-card/50 backdrop-blur-sm border-b flex-shrink-0">
-    <div className="flex space-x-1.5">
+const TerminalHeader = ({ setShowChat }: { setShowChat: (show: boolean) => void }) => (
+  <div className="flex items-center h-10 px-2 sm:px-3 bg-card/50 backdrop-blur-sm border-b flex-shrink-0">
+    <div className="flex items-center gap-1.5">
       <div className="w-3 h-3 rounded-full bg-red-500"></div>
       <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
       <div className="w-3 h-3 rounded-full bg-green-500"></div>
@@ -26,6 +28,17 @@ const TerminalHeader = () => (
       <TerminalIcon className="inline-block h-4 w-4 mr-1 -mt-0.5" />
       <span>afroz@portfolio: ~</span>
     </div>
+    <Button
+      variant="outline"
+      size="sm"
+      onClick={() => setShowChat(true)}
+      className={cn(
+        "h-8 text-xs sm:text-sm bg-background/80 backdrop-blur-sm border-primary/50 text-primary hover:bg-primary/10 hover:text-primary",
+        "ai-chat-button-glow"
+      )}
+    >
+        <MessageSquare className="mr-2 h-4 w-4" /> Assistant
+    </Button>
   </div>
 );
 
@@ -118,7 +131,7 @@ export default function Terminal({ history, setHistory, setTheme, setShowChat }:
 
   return (
     <div className="h-full flex flex-col bg-background/50 backdrop-blur-sm" onClick={handleTerminalClick}>
-      <TerminalHeader />
+      <TerminalHeader setShowChat={setShowChat} />
       <div ref={terminalRef} className="flex-grow p-2 sm:p-4 overflow-y-auto">
         <div className="flex flex-col space-y-4">
           {history.map((item) => (

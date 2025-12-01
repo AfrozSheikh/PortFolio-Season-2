@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { Bot, Loader2, Send, User, X, Sparkles } from 'lucide-react';
+import { Bot, Loader2, Send, User, X, Sparkles, Terminal as TerminalIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -23,7 +23,7 @@ const QUICK_PROMPTS = [
     "How do your skills match a senior frontend developer role?",
 ];
 
-export default function ChatPanel() {
+export default function ChatPanel({ setShowChat }: { setShowChat: (show: boolean) => void }) {
   const [messages, setMessages] = React.useState<Message[]>([]);
   const [input, setInput] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false);
@@ -122,21 +122,31 @@ export default function ChatPanel() {
   return (
     <div className="flex h-full flex-col bg-card/80 backdrop-blur-sm text-card-foreground">
       <CardHeader className="flex-shrink-0 border-b p-4">
-        <div className="flex items-center space-x-2 sm:space-x-4">
-          <div className="relative">
-            <Avatar className="h-10 w-10 sm:h-12 sm:w-12 border-2 border-primary/50">
-              <AvatarImage src={profile.avatarUrl} alt="AI Assistant" />
-              <AvatarFallback>AI</AvatarFallback>
-            </Avatar>
-            <div className="absolute -bottom-1 -right-1 block h-3 w-3 sm:h-4 sm:w-4 rounded-full border-2 border-background bg-green-500" />
-          </div>
-          <div>
-            <CardTitle className="font-headline text-base sm:text-lg text-primary flex items-center gap-2">
-                <Sparkles size={20}/>
-                <span>AI Assistant</span>
-            </CardTitle>
-            <CardDescription className="text-xs sm:text-sm">Your guide to Afroz&apos;s portfolio.</CardDescription>
-          </div>
+        <div className="flex items-center justify-between space-x-2 sm:space-x-4">
+            <div className='flex items-center space-x-2 sm:space-x-4'>
+                <div className="relative">
+                    <Avatar className="h-10 w-10 sm:h-12 sm:w-12 border-2 border-primary/50">
+                    <AvatarImage src={profile.avatarUrl} alt="AI Assistant" />
+                    <AvatarFallback>AI</AvatarFallback>
+                    </Avatar>
+                    <div className="absolute -bottom-1 -right-1 block h-3 w-3 sm:h-4 sm:w-4 rounded-full border-2 border-background bg-green-500" />
+                </div>
+                <div>
+                    <CardTitle className="font-headline text-base sm:text-lg text-primary flex items-center gap-2">
+                        <Sparkles size={20}/>
+                        <span>AI Assistant</span>
+                    </CardTitle>
+                    <CardDescription className="text-xs sm:text-sm">Your guide to Afroz&apos;s portfolio.</CardDescription>
+                </div>
+            </div>
+            <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowChat(false)}
+                className="bg-background/80 backdrop-blur-sm border-primary/50 text-primary hover:bg-primary/10 hover:text-primary"
+            >
+                <TerminalIcon className="mr-2 h-4 w-4" /> Terminal
+            </Button>
         </div>
       </CardHeader>
       
