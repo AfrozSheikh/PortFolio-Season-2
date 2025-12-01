@@ -21,7 +21,7 @@ const Title = ({ children }: { children: React.ReactNode }) => (
   <h2 className="font-headline text-primary uppercase tracking-widest font-bold text-base mb-2">{children}</h2>
 );
 
-const Divider = () => <div className="w-full border-t border-dashed border-foreground/20 my-3"></div>;
+const Divider = () => <div className="w-full border-t border-dashed border-border my-3"></div>;
 
 export const WelcomeMessage = () => (
   <OutputContainer>
@@ -58,7 +58,7 @@ export const HelpMessage = ({ commands, args, onCommand }: { commands: { [key: s
       <Title>Available Commands</Title>
       <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-1">
         {Object.entries(commands).map(([command, description]) => (
-          <li key={command} className="flex items-center">
+          <li key={command} className="flex items-start">
             <Button
                 variant="link"
                 className="text-primary font-bold w-24 inline-block p-0 h-auto text-left justify-start"
@@ -66,7 +66,7 @@ export const HelpMessage = ({ commands, args, onCommand }: { commands: { [key: s
             >
                 {command}
             </Button>
-            <span>{description}</span>
+            <span className="text-muted-foreground">{description}</span>
           </li>
         ))}
       </ul>

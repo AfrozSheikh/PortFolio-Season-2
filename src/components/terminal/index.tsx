@@ -1,4 +1,3 @@
-
 'use client';
 
 import * as React from 'react';
@@ -17,7 +16,7 @@ interface TerminalProps {
 }
 
 const TerminalHeader = () => (
-  <div className="flex items-center h-8 px-3 bg-muted/50 border-b flex-shrink-0">
+  <div className="flex items-center h-8 px-3 bg-card/50 backdrop-blur-sm border-b flex-shrink-0">
     <div className="flex space-x-1.5">
       <div className="w-3 h-3 rounded-full bg-red-500"></div>
       <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
@@ -107,7 +106,7 @@ export default function Terminal({ history, setHistory, setTheme, setShowChat }:
   };
 
   return (
-    <div className="h-full flex flex-col bg-background/80 backdrop-blur-sm" onClick={handleTerminalClick}>
+    <div className="h-full flex flex-col bg-background/50 backdrop-blur-sm" onClick={handleTerminalClick}>
       <TerminalHeader />
       <div ref={terminalRef} className="flex-grow p-4 overflow-y-auto">
         <div className="flex flex-col space-y-4">

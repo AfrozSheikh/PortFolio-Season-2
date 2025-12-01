@@ -21,7 +21,7 @@ export default function Home() {
   }, [theme]);
 
   return (
-    <main className="relative flex min-h-screen flex-col items-center justify-center p-2 sm:p-4 lg:p-6 transition-colors duration-300">
+    <main className="relative flex min-h-screen flex-col items-center justify-center p-2 sm:p-4 lg:p-6 transition-colors duration-300 bg-background text-foreground">
       <div className="absolute top-3 right-3 sm:top-4 sm:right-4 z-20">
         <Button
           variant="outline"
@@ -41,7 +41,7 @@ export default function Home() {
         </Button>
       </div>
 
-      <div className="w-full max-w-7xl flex-grow rounded-lg border shadow-2xl shadow-primary/10 overflow-hidden">
+      <div className="w-full max-w-7xl flex-grow rounded-lg border shadow-2xl shadow-primary/10 overflow-hidden bg-card">
         {showChat ? (
           <ChatPanel />
         ) : (

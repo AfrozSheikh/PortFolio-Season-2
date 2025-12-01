@@ -1,8 +1,7 @@
-
 'use client';
 
 import * as React from 'react';
-import { Bot, Loader2, Send, User, X } from 'lucide-react';
+import { Bot, Loader2, Send, User, X, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -121,7 +120,7 @@ export default function ChatPanel() {
   };
 
   return (
-    <div className="flex h-full flex-col bg-card text-card-foreground">
+    <div className="flex h-full flex-col bg-card/80 backdrop-blur-sm text-card-foreground">
       <CardHeader className="flex-shrink-0 border-b">
         <div className="flex items-center space-x-4">
           <div className="relative">
@@ -132,7 +131,10 @@ export default function ChatPanel() {
             <div className="absolute -bottom-1 -right-1 block h-4 w-4 rounded-full border-2 border-background bg-green-500" />
           </div>
           <div>
-            <CardTitle className="font-headline text-lg text-primary">AI Assistant</CardTitle>
+            <CardTitle className="font-headline text-lg text-primary flex items-center gap-2">
+                <Sparkles size={20}/>
+                <span>AI Assistant</span>
+            </CardTitle>
             <CardDescription>Your guide to Afroz&apos;s portfolio. Available 24/7.</CardDescription>
           </div>
         </div>
@@ -143,13 +145,16 @@ export default function ChatPanel() {
           {messages.map((message) => (
             <div key={message.id} className={cn("flex items-start gap-4", message.sender === 'user' ? "justify-end" : "")}>
               {message.sender === 'ai' && (
-                <Avatar className="h-9 w-9 border">
-                    <AvatarFallback><Bot size={20} /></AvatarFallback>
+                <Avatar className="h-9 w-9 border-2 border-primary/20 bg-background">
+                    <AvatarFallback className='bg-transparent text-primary'><Bot size={20} /></AvatarFallback>
                 </Avatar>
               )}
-              <div className={cn("max-w-xl rounded-lg px-4 py-3 shadow-sm", message.sender === 'user' ? "bg-primary text-primary-foreground" : "bg-muted")}>
+              <div className={cn(
+                  "max-w-xl rounded-lg px-4 py-3 shadow-sm prose prose-sm prose-invert prose-p:my-0",
+                   message.sender === 'user' ? "bg-primary text-primary-foreground" : "bg-muted"
+                )}>
                 {message.text ? (
-                    <p className="text-sm whitespace-pre-wrap">{message.text}</p>
+                    <p className="whitespace-pre-wrap">{message.text}</p>
                 ) : (
                     <div className="flex items-center space-x-2 text-muted-foreground p-1">
                         <Loader2 className="h-5 w-5 animate-spin" />
@@ -165,8 +170,8 @@ export default function ChatPanel() {
           ))}
           {isLoading && messages[messages.length-1]?.sender !== 'ai' && (
             <div className="flex items-start gap-4">
-              <Avatar className="h-9 w-9 border">
-                <AvatarFallback><Bot size={20} /></AvatarFallback>
+              <Avatar className="h-9 w-9 border-2 border-primary/20 bg-background">
+                <AvatarFallback className='bg-transparent text-primary'><Bot size={20} /></AvatarFallback>
               </Avatar>
               <div className="max-w-lg rounded-lg px-4 py-3 bg-muted shadow-sm">
                 <div className="flex items-center space-x-2 text-muted-foreground">
@@ -185,7 +190,7 @@ export default function ChatPanel() {
                         <button
                           key={prompt}
                           onClick={() => handleSend(prompt)}
-                          className="text-left text-sm p-3 rounded-lg border bg-background hover:bg-muted transition-colors text-foreground"
+                          className="text-left text-sm p-3 rounded-lg border bg-background/50 hover:bg-muted transition-colors text-foreground"
                         >
                           {prompt}
                         </button>
@@ -196,7 +201,7 @@ export default function ChatPanel() {
         <ScrollBar/>
       </ScrollArea>
 
-      <div className="border-t bg-background p-4 flex-shrink-0">
+      <div className="border-t bg-card/50 p-4 flex-shrink-0">
         <div className="relative">
           <Textarea
             ref={inputRef}
@@ -209,7 +214,7 @@ export default function ChatPanel() {
                 handleSend();
               }
             }}
-            className="pr-24 min-h-[44px] text-base"
+            className="pr-24 min-h-[44px] text-base bg-input placeholder:text-muted-foreground"
             rows={1}
             disabled={isLoading}
           />
