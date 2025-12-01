@@ -26,8 +26,8 @@ const TerminalHeader = ({ setShowChat }: { setShowChat: (show: boolean) => void 
     </div>
     <div className="text-center text-sm font-sans text-muted-foreground truncate">
       <TerminalIcon className="inline-block h-4 w-4 mr-1 -mt-0.5" />
-      <span className="hidden sm:inline">afroz@portfolio: ~</span>
-      <span className="sm:hidden">afroz@portfolio</span>
+      <span className="hidden sm:inline">afroz@: ~</span>
+      <span className="sm:hidden">afroz@</span>
     </div>
     <div className="flex justify-end">
       <Button
